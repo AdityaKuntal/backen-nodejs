@@ -8,7 +8,7 @@ res.send("how was your day")
 })
 
 
-router.get('/number',newthings.number)
+router.get('/number',newthings.number)  // path any things we create .... in
 router.get('/movies/:indexNumber',newthings.indexNumber)
 router.get('/moviesIndex/:moviesIndex',newthings.moviesIndex)
 
