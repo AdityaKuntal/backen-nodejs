@@ -1,102 +1,77 @@
-const authormodel = require("../authorModel/authorModel");
-const bookmodel = require("../bookModel/bookModel");
-const publishermodel = require("../publisherController/publisherModel");
+const authorModel = require('../authorModel/authorModel')
+const PublisherModel = require ('../publishermodel/publishermodel')
+const bookModel= require('../bookModel/bookModel')
 
-const createNewAuthor = async function (req, res) {
-  let data = req.body;
-  const { author_name, address } = data;
-  if (!author_name) {
-   return res.send("Name is Required");
-  }
-  if (!address) {
-    return res.send("Address is Required");
-  }
-  let savedData = await authormodel.create(data);
-  res.send({ msg: savedData });
-};
+const createNewAuthor=async function(req,res){
+    let newAuthorData =req.body;
+    let saveData=await authorModel.create(newAuthorData);
+    res.send(saveData);
+ }
 
-const getNewAuthor = async function (req, res) {
-  let allUsers = await authormodel.find();
-  res.send({ msg: allUsers });
-};
+ const createNewPublisher = async function (req, res) {
+    let newPublisherData = req.body
+    let savePublisherData=await PublisherModel.create(newPublisherData)
+    res.send(savePublisherData)
+}
 
-const createNewBook = async function (req, res) {
-  let data = req.body;
-  const { bookName} = data;
-  if (!bookName) {
-    res.send("bookName is Required");
-  }
-  let savedData = await bookmodel.create(data);
-  res.send({ msg: savedData });
-};
+const createBook = async function (req, res) {
 
-const getNewBook = async function (req, res) {
-  let allUsers = await bookmodel.find().populate("author_id").populate("publisher");
-  res.send({ msg: allUsers });
-};
+    let data = req.body
+    let { author, publisher } = data
+    if (!author) return res.send("please provide authorId")
+    if (!publisher) return res.send("please provide publisherId")
 
-const createNewPublisher = async function (req, res) {
-  let data = req.body;
-  const { name, headQuarter } = data;
-  if (!name) {
-    res.send("Name is Required");
-  }
-  if (!headQuarter) {
-    res.send("headQuarter is Required");
-  }
-  let savedData = await publishermodel.create(data);
-  res.send({ msg: savedData });
-};
+    let checkAuthor = await authorModel.findById(data.author)
+    if (!checkAuthor) return res.send("no data authors found")
 
-const getNewPublisher = async function (req, res) {
-  let allUsers = await publishermodel.find();
-  res.send({ msg: allUsers });
-};
+    let checkPublisher = await PublisherModel.findById(data.publisher)
+    if (!checkPublisher) return res.send("no data publishers found")
 
-const putNewBook = async function (req, res) {
-  let obj1 = await publishermodel.findOne({ name: "Penguin" });
-  let id1 = obj1._id;
-  console.log(id1);
-  let obj2 = await publishermodel.findOne({ name: "HarperCollins" });
-  let id2 = obj2._id;
-  console.log(id2);
+    let saveData = await bookModel.create(data)
+    res.send({ msg: saveData, status: true })
 
-  let newbooks = await bookmodel.updateMany(
-    { publisher: [id1, id2] },
-    { $set: { isHardCover: false } },
-    { new: true }
-  );
-  let updatedbooks = await bookmodel.find({ newbooks });
-  res.send({ data: updatedbooks });
-};
+}
 
-const updateRating = async function (req, res) {
-  let arr1 = await authormodel.find({ ratings: { $gt: 3.5 } });
-  let newarr = [];
-  for (i of arr1) {
-    id = i._id;
-    let tosend = await bookmodel.findOneAndUpdate(
-      { author_id: id },
-      { $inc: { price: 10 } },
-      { new: true }
-    );
-    newarr.push(tosend);
-  }
-  res.send({ mes: newarr });
-};
+const getFullDetail = async function (req, res) {
+    let fullData = await bookModel.find().populate("author").populate ("publisher")
+    res.send(fullData);
 
-module.exports.createNewAuthor = createNewAuthor;
-module.exports.getNewAuthor = getNewAuthor;
-module.exports.createNewBook = createNewBook;
-module.exports.getNewBook = getNewBook;
-module.exports.createNewPublisher = createNewPublisher;
-module.exports.getNewPublisher = getNewPublisher;
-module.exports.putNewBook = putNewBook;
-module.exports.updateRating = updateRating;
+}
+const updateBooks = async function(req,res){
+    
+
+        //Without populate
+        let findIdByPublisher = await PublisherModel.find({ name: { $in: ["Penguin", "HarperCollins"] } }).select({ _id: 1 })
+        let findIdByRating = await authorModel.find({ rating: { $gt: 3.5 } }).select({ _id: 1 })
+    
+        //Using loop
+        const arrOfPublisherId = []
+        for (let i = 0; i < findIdByPublisher.length; i++) {
+            arrOfPublisherId.push(findIdByPublisher[i]._id)
+
+        }
+    const arrfindIdByRating =[]
+    for(let i =0; i<findIdByRating.length;i++)
+    arrfindIdByRating.push(findIdByRating[i]._id)
+    
+        let setHardCover = await bookModel.updateMany({ publisher: { $in: arrOfPublisherId } }, { isHardCover: true }, { new: true })
+        let updatePrice = await bookModel.updateMany({ rating: { $in: findIdByRating } }, { $inc: { price:75 } }, { new: true })
+    
+    
+    
+       res.send({ status: true, setHardCover: setHardCover, updatePice: updatePrice })
+       
+    }
+    
 
 
 
 
 
+module.exports.author = createNewAuthor
+module.exports.Publisher = createNewPublisher
+module.exports.NewBook = createBook
+module.exports.myUpdate = getFullDetail
+module.exports.myGetBooks = updateBooks
 
- 
+

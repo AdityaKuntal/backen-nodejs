@@ -1,41 +1,18 @@
 
 const express = require('express')
 const Router = express.Router()
-const bookControllers = require('../bookController/bookController')
+const bookController = require('../bookController/bookController')
+
+
+Router.post("/author",bookController.author)
+Router.post("/Publisher",bookController.Publisher)
+Router.post("/NewBook",bookController.NewBook)
+Router.get("/myUpdate",bookController.myUpdate)
+Router.put("/myGetBooks",bookController.myGetBooks)
 
 
 
 
-router.post("/createNewAuthor", bookControllers.createNewAuthor)
-
-
-
-router.get("/getNewAuthor", bookControllers.getNewAuthor)
-
-
-
-router.post("/createNewBook", bookControllers.createNewBook)
-
-
-
-router.get("/getNewBook", bookControllers.getNewBook)
-
-
-
-router.post("/createNewPublisher", bookControllers.createNewPublisher)
-
-
-
-router.get("/getNewPublisher", bookControllers.getNewPublisher)
-
-
-
-router.put("/putNewBook", bookControllers.putNewBook)
-
-
-
-
-router.put("/updateRating", bookControllers.updateRating)
 
 
 
