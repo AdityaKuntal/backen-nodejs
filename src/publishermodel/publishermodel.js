@@ -1,4 +1,5 @@
-const newPublisherSchema=new mongoose.Schema({
+const mongoose = require("mongoose")
+const newPublisherSchema= new mongoose.Schema({
     name:{
         type:String,
         required:true
