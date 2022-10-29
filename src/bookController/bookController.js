@@ -1,47 +1,99 @@
- const bookModel = require('../bookModel/bookModel')
-//  const{isValidRequestBody,isValid,isValidName, isNaNYear}=require('../validator/validator')
-const authorModel = require('../authorModel/authorModel')
-const { authorId } = require('../authorController/authorController')
+const authormodel = require("../authorModel/authorModel");
+const bookmodel = require("../bookModel/bookModel");
+const publishermodel = require("../publisherController/publisherModel");
 
-
-const createBook= async function (req, res) {
-    let data= req.body  
-     let savedData= await bookModel.create(data)
-    res.send({msg: savedData})
-}
-
-
-const bookByCb= async function(req, res){
-    let booksOfCb = await authorModel.find({author_name: "Chetan Bhagat"}).select("author_id")
-    console.log(booksOfCb)
-    let finalData = await bookModel.find({author_id:booksOfCb[0].author_id})
-    console.log(finalData)
-    res.send({msg:finalData})
-}
-
-const findAndUpdate = async function (req, res){
-    let newValue = await bookModel.findOneAndUpdate({name: "Two states"},{$set: {prices: 200}},{new:true})
-    let updatePrice = newValue.prices;
-   let authorUpdate = await authorModel.find({author_id: {$eq: newValue.author_id}}).select({authorName:1, _id:0});
-   res.send({msg: authorUpdate, updatePrice});
- }
-
- const findBook =async function(req, res){
-    let allBook = await bookModel.find({prices:{$gte:50, $lte:100}});
-
-    let result = allBook.map(x=>x.author_id);
-    console.log(result)
-    let newBooks = await authorModel.find({author_id:result}).select({authorName:1, _id:0});
-    console.log(newBooks)
-    res.send({msg: newBooks,allBook});
+const createNewAuthor = async function (req, res) {
+  let data = req.body;
+  const { author_name, address } = data;
+  if (!author_name) {
+   return res.send("Name is Required");
   }
- 
+  if (!address) {
+    return res.send("Address is Required");
+  }
+  let savedData = await authormodel.create(data);
+  res.send({ msg: savedData });
+};
 
+const getNewAuthor = async function (req, res) {
+  let allUsers = await authormodel.find();
+  res.send({ msg: allUsers });
+};
 
-    module.exports.createBook=createBook
-    module.exports.listOfAllBook=bookByCb
-    module.exports.findUpdate=findAndUpdate
-    module.exports.findBook=findBook
+const createNewBook = async function (req, res) {
+  let data = req.body;
+  const { bookName} = data;
+  if (!bookName) {
+    res.send("bookName is Required");
+  }
+  let savedData = await bookmodel.create(data);
+  res.send({ msg: savedData });
+};
+
+const getNewBook = async function (req, res) {
+  let allUsers = await bookmodel.find().populate("author_id").populate("publisher");
+  res.send({ msg: allUsers });
+};
+
+const createNewPublisher = async function (req, res) {
+  let data = req.body;
+  const { name, headQuarter } = data;
+  if (!name) {
+    res.send("Name is Required");
+  }
+  if (!headQuarter) {
+    res.send("headQuarter is Required");
+  }
+  let savedData = await publishermodel.create(data);
+  res.send({ msg: savedData });
+};
+
+const getNewPublisher = async function (req, res) {
+  let allUsers = await publishermodel.find();
+  res.send({ msg: allUsers });
+};
+
+const putNewBook = async function (req, res) {
+  let obj1 = await publishermodel.findOne({ name: "Penguin" });
+  let id1 = obj1._id;
+  console.log(id1);
+  let obj2 = await publishermodel.findOne({ name: "HarperCollins" });
+  let id2 = obj2._id;
+  console.log(id2);
+
+  let newbooks = await bookmodel.updateMany(
+    { publisher: [id1, id2] },
+    { $set: { isHardCover: false } },
+    { new: true }
+  );
+  let updatedbooks = await bookmodel.find({ newbooks });
+  res.send({ data: updatedbooks });
+};
+
+const updateRating = async function (req, res) {
+  let arr1 = await authormodel.find({ ratings: { $gt: 3.5 } });
+  let newarr = [];
+  for (i of arr1) {
+    id = i._id;
+    let tosend = await bookmodel.findOneAndUpdate(
+      { author_id: id },
+      { $inc: { price: 10 } },
+      { new: true }
+    );
+    newarr.push(tosend);
+  }
+  res.send({ mes: newarr });
+};
+
+module.exports.createNewAuthor = createNewAuthor;
+module.exports.getNewAuthor = getNewAuthor;
+module.exports.createNewBook = createNewBook;
+module.exports.getNewBook = getNewBook;
+module.exports.createNewPublisher = createNewPublisher;
+module.exports.getNewPublisher = getNewPublisher;
+module.exports.putNewBook = putNewBook;
+module.exports.updateRating = updateRating;
+
 
 
 
