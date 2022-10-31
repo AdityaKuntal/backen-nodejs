@@ -1,54 +1,51 @@
-  TOPIC: Mongoose Populate and Reference
+ #ASSIGNMENT :-
+Write a middleware that logs (console.log) some data everytime any API is hit
+Data to be logged:-the current timestamp(as date time) , the IP of the user and the route being requested).
+For this first figure out how to get the route location being request, how to get current timestamp and how to get the IP.
+NOTE: ip of local computer will come as ::1 so dont get disturbed by seeing this)
+ 
+e.g: you should be logging something like this on each line:
+time , IP, Route should be printed on each line in terminal( every time an api is hit)
+2010-08-19 14:00:00 , 123.459.898.734 , /createUser
 
-For this assignment the session branch is session/populate-reference
-For the solution you have to create a new branch in your own repo- assignment/populate-reference
-Use your own Atlas database links to avoid issues. Use these collection names if you have already used the collections in previous assignments - newBook, newAuthor, newPublisher.
+Next() :
+it is a callback function in a middleware
+it passses the control to the subsequent function
+if next () is missed, the control flow will hang
+Route based Middlewares
+Global Middlewares
+manages the flow of control
+code reusability esp for restrivted routes
+sit between your router and your HANDLER
+router.post('/getHomePage' , MiddlewareIfLoggedIn, UserController.homePage)
 
-A newAuthor document should look like this (no author_id anymore - you can delete this from the schema)
- 	{ 
-_id: ObjectId("61951bfa4d9fe0d34da86829"),
-		authorName:"Chetan Bhagat",
-		age:50,
-		address:"New Delhi",
-rating: 2
-	} 
-A newPublisher document looks like this.
-{
-		_id: ObjectId("61951bfa4d9fe0d34da86344"),
-name: “Penguin”,
-headQuarter: “New Delhi”,
-}
-A newBook document should look like this. The author property is a reference to newAuthor collection. 
-{
-		_id: ObjectId("61951bfa4d9fe0d34da86344"),
-	name:"Two states",
-		author:"61951bfa4d9fe0d34da86829",
-	price:50,
-		ratings:4.5,
-		publisher: "61951bfa4d9fe0d34da84523"
-}
+function MiddlewareIfLoggedIn( req, res, next) { if loggedIn then call the next fucntion/handler which will give us the home page feeds else res.send( " please login or register") }
 
+restricted API's
+router.get('/homePage', mid1, UserController.feeds) router.get('/profileDetails', mid1, UserController.profileDetails) router.get('/friendList', mid1, UserController.friendList) router.get('/changePassword', mid1, UserController.changePassword)
 
+OPen-to-all API's
+router.get('/termsAndConditions', UserController.termsAndConditions) router.get('/register', UserController.register)
 
-1. Write a POST api that creates an author from the details in request body
-2. Write a POST api that creates a publisher from the details in the request body
+app.use( midGlobal)
 
-3. Write a POST api that creates a book from the details in the request body. The api takes both the author and publisher from the request body. 
-In this api, you have to write a logic that validates the following :
-The authorId is present in the request body. If absent send an error message that this detail is required
-If present, make sure the authorId is a valid ObjectId in the author collection. If not then send an error message that the author is not present.
-The publisherId is present in the request body. If absent send an error message that this detail is required
-If present, make sure the publisherId is a valid ObjectId in the publisher collection. If not then send an error message that the publisher is not present.
+body-parser functions:
+getting the post data in req.body
+getting the req.body data as JSON
+providing the header data in req.header etc etc
+you punch your userName and password if correct you get loggedIn...
 
-4. Write a GET api that fetches all the books along with their author details (you have to populate for this) as well the publisher details (you have to populate for this) 
+next time you call an api to get your FB friendList..FB should ask you for a login again ( BUT this does not happen in real life)
 
+after 30 mins..you try to access your profile page..ideally FB should ask you to login again..BUT this does not happen in real life
 
+you punch your userName and password ..FB will craete a unique secret token( unique to every user) and send it to the browser..Chrome will save this token in its storage next time I want to acess my friendList..chrome(frontend) will send this token ( already stored in chrome storage) to the API..this API will first call a Middleware which will verify if the token is correct and who does it belong to..if token is correct then we will send the friend list of the concerned person..else send not authorised
 
+next time when you request your profile page..token is checked ..if correct you get your profile page, else "not authorised"
 
-Edit: New problem (5)
-5. Create at least 4 publishers (Penguin, Bloomsbury, Saraswati House, HarperCollins). Create at least 6 authors with ratings 2, 3, 3.5, 4, 4.5 and 5. Create around 10 books with these publishers and authors.
-Create a new PUT api /books and perform the following two operations
- a) Add a new boolean attribute in the book schema called isHardCover with a default false value. For the books published by 'Penguin' and 'HarperCollins', update this key to true.
- b) For the books written by authors having a rating greater than 3.5, update the books price by 10 (For eg if old price for such a book is 50, new will be 60) 
+intro
 
+Write a middleware that logs (console.log) some data everytime any API is hit Data to be logged:-the current timestamp(as date time) , the IP of the user and the route being requested). For this first figure out how to get the route location being requested, how to get current timestamp and how to get the IP. NOTE: ip of local computer will come as ::1 so dont get disturbed by seeing this)
+
+e.g: you should be logging something like this on each line: time , IP, Route should be printed on each line in terminal( every time an api is hit) 2010-08-19 14:00:00 , 123.459.898.734 , /createUser 2010-08-19 14:00:00 , 123.459.898.734 , /basicAPi 2010-08-19 14:00:00 , 123.459.898.734 , /falanaAPI
 
