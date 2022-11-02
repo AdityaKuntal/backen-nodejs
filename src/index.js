@@ -7,7 +7,7 @@ const moment = require('moment')
 app.use(bodyparser.json())
 
  mongoose.connect("mongodb+srv://Adityakunta:IPSyBcf7uKmQrNcH@aditya.4payvyl.mongodb.net/?retryWrites=true&w=majority",{
-    // useNewUrlParser:true
+   
 })
 
 .then(()=>console.log("Hukum mere aakaa  🪁  batao kya krna ab mujko  😄   "))
