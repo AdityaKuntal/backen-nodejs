@@ -1,18 +1,19 @@
 
 const express = require('express')
 const Router = express.Router()
-const orderController = require('../controller/orderController')
-const productController = require('../controller/productController')
 const userController = require('../controller/userController')
 const middleware = require ('../middleware/middleware')
 
 
 
 
+Router.post("/createUser", userController.createUser  )
 
-Router.post('/createUser',middleware.mid1,userController.createUser)
-Router.post('/createProduct',productController.createProduct)
-Router.post('/orderpurchase',middleware.mid1,orderController.orderpurchase)
+Router.post("/login",userController.login)
+
+Router.get('/userDetail/:userId',middleware.mid1, userController.getUser)
+Router.put('/usersUpdate/:userId',middleware.mid1,userController.upadteOne)
+Router.delete('/usersDelete/:userId',middleware.mid1,userController.deleteuser)
 
 
 

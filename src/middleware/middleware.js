@@ -1,25 +1,13 @@
+const jwt = require('jsonwebtoken')
 
+const letCheckIsFreeAppUser = async (req,res,next)=>{               
+   let token =req.headers["x-auth-token"]
+    if(!token) return res.send({msg:"x-auth-token is required!"})
+    let decodeToken= jwt.verify(token,"function-lithium" )
+    if(!decodeToken) return res.send({msg:"Not a valid Token!"})
+    
+    next()
 
-const letCheckIsFreeAppUser = async function(req,res,next){               
-   
-        let data=req.headers
-        let validinfo=data["isfreeappuser"]
-        if(validinfo){
-            if(validinfo=="true"){
-                req.isfreeappuser=true
-            }else{
-                req.isfreeappuser=false
-            }
-            next();
-        }else{
-            res.send({data:"header missing"})
-        }
-        }
-
-
-
-// let isFreeAppUser=req.headers.isfreeappuser;
-//         if(isFreeAppUser){
-//             req.body["isFreeAppUser"] = req.headers.isfreeappuser;
+}
 
 module.exports.mid1=letCheckIsFreeAppUser
