@@ -1,18 +1,25 @@
 
 
-const letCheckIsFreeAppUser = async function(req,res,next){
-    req.header["isFreeAppUser"]=req.header.isFreeAppUser
-    let isFreeAppUser = req.header.isFreeAppUser
-    if(isFreeAppUser){
-        console.log(req.body)
-        next()
-    }
-    
-    else{
-        res.send("request is missing a mandatory header")
+const letCheckIsFreeAppUser = async function(req,res,next){               
+   
+        let data=req.headers
+        let validinfo=data["isfreeappuser"]
+        if(validinfo){
+            if(validinfo=="true"){
+                req.isfreeappuser=true
+            }else{
+                req.isfreeappuser=false
+            }
+            next();
+        }else{
+            res.send({data:"header missing"})
+        }
+        }
 
-    }
 
-}
+
+// let isFreeAppUser=req.headers.isfreeappuser;
+//         if(isFreeAppUser){
+//             req.body["isFreeAppUser"] = req.headers.isfreeappuser;
 
 module.exports.mid1=letCheckIsFreeAppUser

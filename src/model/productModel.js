@@ -12,4 +12,4 @@ price:{
 }
 },{timestamps:true});
 
-module.exports=module.exports = mongoose.model('User', productSchema)
+module.exports=module.exports = mongoose.model('product', productSchema)
