@@ -19,17 +19,18 @@ let login = async (req , res) =>{
     if(!password) return res.send({status : false , msg : "password is not provided"})
     let user = await userModel.findOne({emailId:email,password:password})
     if(!user) return res.send({status : false , msg: "eamil and password is not correct"})
-    let token = jwt.sign({userId : user._id.toString()},"function-lithium")
+    let token = jwt.sign({userId : user._id},"function-lithium")
     res.send({status:true , msg:token})
     
   
 }
 
 let getUserDetail =async function(req,res){
-    let userId=req.params.userId
-    let getUserDetail=await userModel.findOne({userId:userId})
-    if(!getUserDetail) return res.send({msg:"User detail not found!"})
-     res.send({Status:true,data:getUserDetail})
+    let userId=req.params.userId//.replace(/:/g,'')
+    let newuser= await userModel.findById(userId)
+    
+    if(!newuser) return res.send({msg:"User detail not found!"})
+     res.send({Status:true,data:newuser})
     }
 
     const upadteOne = async(req,res)=>{
@@ -41,14 +42,14 @@ let getUserDetail =async function(req,res){
     }
 
     const  deleteuser = async (req,res)=>{
-        let userId = req.params.userId
-        let user = await userModel.findById(userId)
-        if(!user) {
-            return res.send({status: false, message: "no such user exists"})
-        }
-        let updatedUser = await userModel.findOneAndUpdate({userId: userId}, {isDeleted: true}, {new: true})
-        res.send({status: true, data: updatedUser})
-    }
+     
+            let Data=req.params.userId
+            let findUser=await userModel.findById(Data)
+            if(!findUser) return res.send({msg:"no user found"})
+            let userDelete=await userModel.findOneAndUpdate({_id:Data},{isDeleted:true},{new:true})
+            return res.send({data:userDelete,msg:true})
+          }
+    
 
     
  module.exports.createUser=createUser

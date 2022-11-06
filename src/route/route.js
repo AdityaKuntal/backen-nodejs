@@ -11,8 +11,8 @@ Router.post("/createUser", userController.createUser  )
 
 Router.post("/login",userController.login)
 
-Router.get('/userDetail/:userId',middleware.mid1, userController.getUser)
-Router.put('/usersUpdate/:userId',middleware.mid1,userController.upadteOne)
+Router.get('/userDetail/:userId',middleware.mid1, middleware.mid2,userController.getUser)
+Router.put('/usersUpdate/:userId',middleware.mid1, middleware.mid2,userController.upadteOne)
 Router.delete('/usersDelete/:userId',middleware.mid1,userController.deleteuser)
 
 
