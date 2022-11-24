@@ -5,7 +5,6 @@ const { default: mongoose } = require('mongoose');
 const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 
 mongoose.connect("mongodb+srv://Adityakunta:IPSyBcf7uKmQrNcH@aditya.4payvyl.mongodb.net/?retryWrites=true&w=majority", {
@@ -17,6 +16,6 @@ mongoose.connect("mongodb+srv://Adityakunta:IPSyBcf7uKmQrNcH@aditya.4payvyl.mong
 app.use('/', route);
 
 
-app.listen(process.env.PORT || 1, function () {
-    console.log('ye apun ka phela project hai   😄  ' + (process.env.PORT || 1+  " bhai error mat diyo baki me dekh huga vs code chacha  😃  "))
+app.listen(process.env.PORT ||1 ,  ()=> {
+    console.log('ye apun ka phela project hai   😄  ' + (process.env.PORT || 5+  " bhai error mat diyo baki me dekh huga vs code chacha  😃  "))
 });
