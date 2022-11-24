@@ -27,7 +27,7 @@ const isValidAuthorId = function(title){
 }
 
 const isValidEmail = function(email){
-        return /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email);
+        return /^[a-z0-9_]{2,}@[a-z]{3,}.[com]{3}$/.test(email);
 
 }
 
