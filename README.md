@@ -1,5 +1,5 @@
 # Mini-Blogs
-# Plutonium
+# Lithium
 
 Repository for backend cohort - Plutonium
 
