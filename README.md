@@ -1,7 +1,7 @@
 # Mini-Blogs
 # Lithium
 
-Repository for backend cohort - Plutonium
+Repository for backend cohort - lithium
 
 ## Blogging Site Mini Project Requirement
 
