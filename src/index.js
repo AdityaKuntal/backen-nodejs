@@ -9,7 +9,7 @@ app.use(express.json());
 mongoose.set('strictQuery', true)
 
 
-mongoose.connect("mongodb+srv://abhi03:UQkqPECmlouMcNjb@cluster1.kwsn7az.mongodb.net/group12Database", {
+mongoose.connect("mongodb+srv://Adityakunta:IPSyBcf7uKmQrNcH@aditya.4payvyl.mongodb.net/?retryWrites=true&w=majority", {
     useNewUrlParser: true
 })
 .then( () => console.log("hu judh chuka hu ab aap apna kaam kar skte hai dhanybaad! 👍 👍 "))
