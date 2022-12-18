@@ -5,124 +5,127 @@ const jwt = require('jsonwebtoken')
 
 
 const {
-    validTitle,
-    validName,
-    validMobile,
-    validemail,
-    validPassword,
-    isValidStreet,
-    isValidPincode}=require("../validation/validation")
+  isValidName,
+  isValidPassword,
+  isValidEmail,
+  isValidTitle,
+  isValidMobileNo,
+  isValidPincode,
+  isValidStreet}=require("../validation/validation")
 
 
 exports.registerUser=async (req,res)=>{
 try{
-const data = req.body
-const {title,name,phone,email,password,address}=data
-const {street,city,pincode}=address
 
-//validation
-if(!title){
+  const data = req.body;
+
+  const { title, name, phone, email, password, address } = { ...data };
+  const { street, city, pincode } = { ...address };
+
+  if (!title) {
     return res
-    .status(400)
-    .send({status:false,msg:"title is required"})}
+      .status(400)
+      .send({ status: false, message: "title is required" });
+  }
 
-if(!name){
+  if (!name) {
     return res
-    .status(400)
-    .send({status:false,msg:"name is required"})}
+      .status(400)
+      .send({ status: false, message: "name is required" });
+  }
 
-if(!phone){
+  if (!phone) {
     return res
-    .status(400)
-    .send({status:false,msg:"phone is required"})}
-if(!email){
+      .status(400)
+      .send({ status: false, message: "phone is required" });
+  }
+
+  if (!email) {
     return res
-    .status(400)
-    .send({status:false,msg:"email is required"})}
-if(!password){
-    return res.
-    status(400)
-    .send({status:false,msg:"password is required"})}
+      .status(400)
+      .send({ status: false, message: "email is required" });
+  }
 
-if (address) {
-        if (typeof address !== "object") {
-          return res
-            .status(400)
-            .send({ status: false, message: "address must be type object" });
-        }
-      }
+  if (!password) {
+    return res
+      .status(400)
+      .send({ status: false, message: "password is required" });
+  }
 
-
-
-
-
-
- const duplicateMobile= await userModel.findOne({phone})
-if(duplicateMobile) return res
-.status(400)
-.send({status:false,msg:"phone number is already registred"})
-
-const duplicateEmail=await userModel.findOne({email})
-if(duplicateEmail) return res
-.status(400)
-.send({status:false,msg:"Email is already registred"})
-
-
-//================================================================regex validation =============================
-
-if (!validTitle(title)) {
+  if (address) {
+    if (typeof address !== "object") {
       return res
         .status(400)
-        .send({ status: false, message: "Enter a valid title" });
+        .send({ status: false, message: "address must be type object" });
     }
+  }
 
-    if (!validemail(email)) {
-      return res
-        .status(400)
-        .send({ status: false, message: "Enter a valid name" });
-    }
+  if (!isValidTitle(title)) {
+    return res
+      .status(400)
+      .send({ status: false, message: "Enter a valid title" });
+  }
 
-    if (!validemail(email)) {
-        return res
-          .status(400)
-          .send({ status: false, message: "Enter a valid email" });
-      }
-      if (!validPassword(password)) {
-        return res
-          .status(400)
-          .send({ status: false, message: "Enter a valid password" });
-      }
+  if (!isValidName(name)) {
+    return res
+      .status(400)
+      .send({ status: false, message: "Enter a valid name" });
+  }
 
+  if (!isValidMobileNo(phone)) {
+    return res
+      .status(400)
+      .send({ status: false, message: "Enter a valid phone number" });
+  }
 
+  const isPhoneAlreadyUsed = await userModel.findOne({ phone });
 
-    if (!validMobile(phone)) {
-      return res
-        .status(400)
-        .send({ status: false, message: "Enter a valid phone number" });
-    }
+  if (isPhoneAlreadyUsed) {
+    return res
+      .status(400)
+      .send({ status: false, message: "phone already exist" });
+  }
+  if (!isValidEmail(email)) {
+    return res
+      .status(400)
+      .send({ status: false, message: "Enter a valid email" });
+  }
 
+  const isEmailAlreadyUsed = await userModel.findOne({ email });
 
-if (address) {
+  if (isEmailAlreadyUsed) {
+    return res
+      .status(400)
+      .send({ status: false, message: "email already exist" });
+  }
+
+  if (!isValidPassword(password)) {
+    return res.status(400).send({
+      status: false,
+      message:
+        "Enter a valid password (min-8,max-15, contains atleast one num and symbol each, Have a mixuture of uppercase and lowercase letters)",
+    });
+  }
+
+  if (address) {
     if (!isValidStreet(street)) {
       return res
         .status(400)
         .send({ status: false, message: "Enter a valid street" });
     }
 
-    if (!validName(city)) {
+    if (!isValidName(city)) {
       return res
         .status(400)
         .send({ status: false, message: "Enter a valid city" });
     }
 
-    if (!isValidPincode(pincode)) {
+    if (isValidPincode(pincode)) {
       return res
         .status(400)
         .send({ status: false, message: "Enter a valid pincode" });
     }
   }
-
-
 
 const salt=await bcrypt.genSalt(saltRounts)
 const HassPassword= await bcrypt.hash(password,salt)
@@ -155,9 +158,9 @@ return res.status(400).send({status:false,msg:err.message})
         .status(400)
         .send({ status: false, msg: "Password is required" })
       //==============================================checking the email id or password is exist or not ===========================//     
-      let getUser = await authorModel
-      .findOne({ email: email })
-      .select({ password: 1 })
+      let getUser = await userModel
+      .findOne({ email: email}).select({password:1})
+      
 
       //================================================User not found==============================================================//    
       if (Object.keys(getUser).length == 0) return res.status(404).send({ status: false, msg: "User not found" })
@@ -169,17 +172,26 @@ return res.status(400).send({status:false,msg:err.message})
       .status(401)
       .send({ status: false, msg: "Password is incorrect" })
 
+      let Payload = {
+        UserId: getUser._id.toString(),
+        EmailID: getUser.email,
+        Batch: "lithium",
+        Group: "40",
+        Project: "project-booksManagementementGroup3",
+      }
+
     
             
-  let token=jwt.sign({userId: data._id.toString()},"sweta") 
-        let finalData = {
-            token: token,
-            userId: data._id.toString(),
-            exp: new Date().getTime()+600,
-        }
+      let token ;
+      
+      token=  jwt.sign(Payload, "keep-it-secret-tillThe-endOf-Course", {
+          expiresIn: "1d",
+        });
+      
+      res.setHeader("x-api-key", token);
        return res
        .status(200)
-       .send({status:true, message:"token is successfully generated", finalData}) 
+       .send({status:true, message:"token is successfully generated", token}) 
 
 
     }catch(error){

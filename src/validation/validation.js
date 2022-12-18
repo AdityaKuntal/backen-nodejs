@@ -1,45 +1,75 @@
-
-  const validTitle = function(value) {
-    let title = /^(Mr|Mrs|Miss)$/; 
-    if (title.test(value)) return true ;
+const isValidName = function (body) {
+  const nameRegex = /^[a-zA-Z_!@#$%^&*()_+?"|:<>/.,;'} ]*$/;
+  return nameRegex.test(body);
 };
 
 const isValidStreet = function (body) {
-    const nameRegex = /^[a-zA-Z0-9_ ]*$/;
-    return nameRegex.test(body);
-  };
-
-
-  const isValidPincode = function (Pincode) {
-    const passRegex = /^[1-9][0-9]{5}$/;
-    return passRegex.test(Pincode);
-  };
-
-  const validISBN = function (isbn) {
-    const isbnRegex =/^97(8|9))?\d{9}(\d|X)$/
-    return isbnRegex.test(isbn)
-
-  }
-
-const validName = function (value) {
-    let name = /^[a-zA-Z ]{3,}$/;
-    if (name.test(value)) return true;
+  const nameRegex = /^[a-zA-Z0-9_ ]*$/;
+  return nameRegex.test(body);
 };
 
-const validMobile = function (value) {
-    let mobile = /^[0-9 ]{10,10}$/;
-    if (mobile.test(value)) return true;
+const isValidEmail = function (email) {
+  return /^[a-z0-9._+~!@#$%^&:;"',<.>?/}{*()]+@[a-z-]+\.[a-z-.]+$/.test(email);
 };
 
-const validemail = function (value) {
-    let email = /^[a-z0-9_]{3,}@gmail.com$/;
-    if (email.test(value)) return true;
+const isValidMobileNo = function (mobile) {
+  return /^[6-9]\d{9}$/.test(mobile);
 };
 
-const validPassword = function (value) {
-    let password= /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&])[a-zA-Z0-9@#$%&]{8,15}$/;
-    if (password.test(value)) return true;
+const isValidTitle = function (title) {
+  return ["Mr", "Mrs", "Miss"].indexOf(title) !== -1;
+};
+
+const isValidPassword = function (Password) {
+  const passRegex =
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,15}$/;
+  return passRegex.test(Password);
+};
+
+const isValidPincode = function (Pincode) {
+  const passRegex = /^[1-9][0-9]{5}$/;
+  return passRegex.test(Pincode);
+};
+
+const isValidISBN = function (ISBN) {
+  const passRegex = /^(?=(?:\D*\d){13}(?:(?:\D*\d){3})?$)[\d-]+$/;
+  return passRegex.test(ISBN);
+};
+
+const isValidReviews = function (review) {
+  const nameRegex = /^[0-9]+$/;
+  return nameRegex.test(review);
+};
+
+const isValidDate = function (date) {
+  const nameRegex = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
+  return nameRegex.test(date);
+};
+
+const isValidRating = function (rating) {
+  const nameRegex = /^[1-5]+$/;
+  return nameRegex.test(rating);
+};
+
+const isValid = function (value) {
+  if (typeof value === "string" && value.trim().length === 0) return false
+  if (typeof value === "undefined" || value === null) return false
+  return true;
 };
 
 
-module.exports={validTitle,validName,validMobile,validemail,validPassword,validISBN,isValidStreet,isValidPincode}
+
+module.exports = {
+  isValidName,
+  isValidEmail,
+  isValidMobileNo,
+  isValidTitle,
+  isValidPassword,
+  isValidPincode,
+  isValidISBN,
+  isValidReviews,
+  isValidDate,
+  isValidRating,
+  isValidStreet,
+  isValid
+};

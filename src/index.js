@@ -10,13 +10,13 @@ app.use(bodyParser.json())
 
 
 mongoose.connect("mongodb+srv://123:1234@cluster0.pf4v08v.mongodb.net/project-3",{
-    useNewUrlparser : true
+    
+    
 })
 .then(()=> console.log("mongoDb is connected"))
 .catch((err) => console.log(err))
 
 app.use("/",route)
 
-app.listen(process.env.PORT ||3000,function(){
-    console.log("server running on port"+" "+ (process.env.PORT || 3000) )
+app.listen(3000,()=>{ console.log(("server running on port 3000") )
 })
