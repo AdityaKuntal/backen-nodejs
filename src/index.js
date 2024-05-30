@@ -28,6 +28,6 @@ app.use('/', route);
 
 
 app.listen(process.env.Port||3000,function(){
-    console.log("Aupn Chalne Ko Tyar Hai "+ (process.env.Port||3000+  " Mongoose Tum Ko Tumhra Maalik Yaad Kar Rha Hai   😃  "))
+    console.log("+ (process.env.Port||3000+  " Mongoose Tum Ko Tumhra Maalik Yaad Kar Rha Hai   😃  "))
     
 })
