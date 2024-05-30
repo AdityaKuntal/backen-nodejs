@@ -10,7 +10,8 @@ app.use(bodyparser.json())
    useNewUrlParser:true
 })
 
-.then(()=>console.log("Hukum mere aakaa  🪁  batao kya krna ab mujko  😄   "))
+.then(()=>console.log("Hukum mere aakaa  🪁  sab kuch ban gya    😄   "))
+  
 .catch(err=> console.log(err))
 
 app.use((req, res, next) => {
